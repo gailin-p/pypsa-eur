@@ -107,7 +107,7 @@ from scipy.sparse.csgraph import connected_components, dijkstra
 logger = logging.getLogger(__name__)
 
 
-def simplify_network_to_380(n):
+def simplify_network_to_380(n, newv: float = 380.0):
     """
     Fix all lines to a voltage level of 380 kV and remove all transformers.
 
@@ -120,11 +120,11 @@ def simplify_network_to_380(n):
     """
     logger.info("Mapping all network lines onto a single 380kV layer")
 
-    n.buses["v_nom"] = 380.0
+    n.buses["v_nom"] = newv
 
-    (linetype_380,) = n.lines.loc[n.lines.v_nom == 380.0, "type"].unique()
+    (linetype_380,) = n.lines.loc[n.lines.v_nom == newv, "type"].unique()
     n.lines["type"] = linetype_380
-    n.lines["v_nom"] = 380
+    n.lines["v_nom"] = newv
     n.lines["i_nom"] = n.line_types.i_nom[linetype_380]
     n.lines["num_parallel"] = n.lines.eval("s_nom / (sqrt(3) * v_nom * i_nom)")
 
