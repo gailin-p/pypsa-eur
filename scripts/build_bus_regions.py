@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-# SPDX-FileCopyrightText: : 2017-2022 The PyPSA-Eur Authors
+# SPDX-FileCopyrightText: : 2017-2023 The PyPSA-Eur Authors
 #
 # SPDX-License-Identifier: MIT
-
 """
 Creates Voronoi shapes for each bus representing both onshore and offshore
 regions.
@@ -15,7 +14,7 @@ Relevant Settings
     countries:
 
 .. seealso::
-    Documentation of the configuration file ``config.yaml`` at
+    Documentation of the configuration file ``config/config.yaml`` at
     :ref:`toplevel_cf`
 
 Inputs
@@ -30,12 +29,12 @@ Outputs
 
 - ``resources/regions_onshore.geojson``:
 
-    .. image:: ../img/regions_onshore.png
+    .. image:: img/regions_onshore.png
         :scale: 33 %
 
 - ``resources/regions_offshore.geojson``:
 
-    .. image:: ../img/regions_offshore.png
+    .. image:: img/regions_offshore.png
         :scale: 33 %
 
 Description
@@ -43,7 +42,6 @@ Description
 """
 
 import logging
-import os
 
 import geopandas as gpd
 import numpy as np
@@ -69,7 +67,6 @@ def voronoi_partition_pts(points, outline):
     -------
     polygons : N - ndarray[dtype=Polygon|MultiPolygon]
     """
-
     points = np.asarray(points)
 
     if len(points) == 1:
@@ -103,7 +100,8 @@ def voronoi_partition_pts(points, outline):
             if not poly.is_valid:
                 poly = poly.buffer(0)
 
-            poly = poly.intersection(outline)
+            with np.errstate(invalid="ignore"):
+                poly = poly.intersection(outline)
 
             polygons.append(poly)
 
