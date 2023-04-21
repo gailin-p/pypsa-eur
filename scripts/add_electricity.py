@@ -754,6 +754,9 @@ if __name__ == "__main__":
     conventional_inputs = {
         k: v for k, v in snakemake.input.items() if k.startswith("conventional_")
     }
+
+    logger.warning(f"Using extendable carriers {extendable_carriers}")
+
     attach_conventional_generators(
         n,
         costs,
